@@ -8,6 +8,7 @@ package etcd
 import (
 	"context"
 	"fmt"
+	"log"
 	"sort"
 	"strconv"
 	"time"
@@ -524,7 +525,11 @@ func (st *State) watchKind(ctx context.Context, resourceKind resource.Kind, sing
 	ctx, cancel := context.WithCancel(ctx)
 	ctx = clientv3.WithRequireLeader(ctx)
 
+	log.Printf(">>>> starting watch")
+
 	watchCh := st.cli.Watch(ctx, etcdKey, clientv3.WithPrefix(), clientv3.WithPrevKV(), clientv3.WithRev(revision))
+
+	log.Printf(">>>> watch started")
 
 	go func() {
 		defer func() {
